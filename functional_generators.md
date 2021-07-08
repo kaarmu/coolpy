@@ -78,7 +78,7 @@ funcs = whichBits, compressedWhichBits, composedWhichBits
 for f in funcs:
     print(
         f'{f.__name__}:',
-        timeit(f.__name__ + '(x)', 'x = int(100 * random())', globals=globals())
+        timeit(f'{f.__name__}(x)', 'x = int(100 * random())', globals=globals())
     )
 ```
 
