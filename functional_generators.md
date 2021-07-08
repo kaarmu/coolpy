@@ -84,3 +84,53 @@ for f in funcs:
 
 Rather unsurprisingly we can see that the composed version was considerably slower. Again this is mainly due to the large overhead
 that we get when having multiple layers of function calls like this, compared to just a single while-loop. But hey, readability matters also.
+
+---
+
+``` python
+def whichBits(n: int) -> list[int]:
+    i, res = 0, []
+    while 1<<i <= n:
+        if 1<<i & n:
+            res.append(i)
+        i += 1
+    return res
+    
+from itertools import count, takewhile
+
+def compressedWhichBits(n: int) -> list[int]:
+    return [i for i in takewhile(lambda i: 1<<i <= n, count()) if 1<<i & n] # can also write if-statement as a filter
+
+from functools import reduce
+
+def compose(*fs):
+    """
+    Functional composition of N functions.
+
+    Can also be used to pipe generators.
+    """
+    if not fs:
+        raise TypeError('compose expected at least 1 argument, got 0')
+    return reduce(lambda f, g: lambda *a, **kw: f(g(*a, **kw)), reversed(fs))
+    
+from functools import partial
+
+def composedWhichBits(n: int) -> list[int]:
+    return compose(
+        count,
+        partial(takewhile, lambda i: 1<<i <= n),
+        partial(filter, lambda i: 1<<i & n),
+        list,
+    )()
+    
+from random import random
+from timeit import timeit
+
+funcs = whichBits, compressedWhichBits, composedWhichBits
+
+for f in funcs:
+    print(
+        f'{f.__name__}:',
+        timeit(f'{f.__name__}(x)', 'x = int(100 * random())', globals=globals())
+    )
+```
