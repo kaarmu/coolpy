@@ -25,8 +25,8 @@ def compressedWhichBits(n: int) -> list[int]:
 Very pretty. But this is rather difficult to read, could we perhaps make some thing more readable? We clearly
 see here that we have a data flow that goes like
 
-1. Create indefinite incrementally increasing indices (who doesn't like a little alliteration ;) )
-2. Take values while 1<<i isn't larger than the value (no point in continuing then)
+1. Create indefinite incrementally increasing indices (who doesn't like a little alliteration 😉 )
+2. Take values while `1<<i` isn't larger than the value (no point in continuing then)
 3. Filter out high bits
 4. Put values in a list
 
@@ -77,10 +77,8 @@ funcs = whichBits, compressedWhichBits, composedWhichBits
 
 for f in funcs:
     print(
-        f.__name__ + ':',
-        timeit(f.__name__ + '(x)',
-               'x = int(100 * random())',
-               globals=globals())
+        f'{f.__name__}:',
+        timeit(f.__name__ + '(x)', 'x = int(100 * random())', globals=globals())
     )
 ```
 
